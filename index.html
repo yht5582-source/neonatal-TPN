@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新生兒 TPN 與營養熱量計算器</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6f42c1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .card-header { background-color: #fff; border-bottom: 1px solid #eee; font-weight: bold; border-radius: 12px 12px 0 0 !important; }
+    .result-box { padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: center; background-color: #fff; border: 1px solid #dee2e6; }
+    .result-title { font-size: 0.85rem; color: #6c757d; margin-bottom: 5px; }
+    .result-value { font-size: 1.4rem; font-weight: bold; color: #212529; }
+    
+    .gir-safe { color: #198754; }
+    .gir-warn { color: #fd7e14; }
+    .gir-danger { color: #dc3545; }
+
+    #macroChartContainer { position: relative; height: 220px; width: 100%; margin: 15px 0; }
+
+    @media print {
+      .d-print-none { display: none !important; }
+      body { background-color: #fff; color: #000; font-size: 12pt; }
+      #print-section { display: block !important; }
+      .print-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+      .print-row { display: flex; justify-content: space-between; margin-bottom: 15px; }
+      .print-box { border: 1px solid #000; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+      .print-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; text-align: center; }
+      .print-table th, .print-table td { border: 1px solid #000; padding: 6px; }
+      .print-table th { background-color: #f2f2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .signature-area { margin-top: 50px; display: flex; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container py-4 d-print-none">
+  <h2 class="text-center mb-4" style="color: #6f42c1;">新生兒 TPN 與腸道營養計算器</h2>
+  
+  <div class="row">
+    <!-- 左側輸入區 -->
+    <div class="col-md-5">
+      <div class="card">
+        <div class="card-header text-primary">1. 處方參數設定</div>
+        <div class="card-body">
+          <form id="tpnForm">
+            <h6 class="text-secondary mb-3">基本生理與液體目標</h6>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label fw-bold text-danger">體重 (kg) *</label>
+                <input type="number" class="form-control border-danger" id="weight" step="0.01" min="0.4" required placeholder="例如: 1.2">
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-bold text-danger">總液體目標 (ml/kg/day) *</label>
+                <input type="number" class="form-control border-danger" id="fluidGoal" step="1" min="60" required placeholder="例如: 150">
+              </div>
+            </div>
+
+            <hr>
+            <h6 class="text-secondary mb-3">腸道營養 (Enteral Nutrition)</h6>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label">配方奶熱量密度</label>
+                <select class="form-select" id="enDensity">
+                  <option value="0">NPO (禁食 0 kcal)</option>
+                  <option value="0.67">標準 (20 kcal/oz = 0.67 kcal/ml)</option>
+                  <option value="0.8" selected>早產兒 (24 kcal/oz = 0.8 kcal/ml)</option>
+                  <option value="0.9">高熱量 (27 kcal/oz = 0.9 kcal/ml)</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">餵食量 (ml/kg/day)</label>
+                <input type="number" class="form-control" id="enVol" step="1" min="0" value="0">
+              </div>
+            </div>
+
+            <hr>
+            <h6 class="text-secondary mb-3">腸道外營養 (Parenteral Nutrition)</h6>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label">胺基酸 (g/kg/day)</label>
+                <input type="number" class="form-control" id="aaDose" step="0.1" min="0" value="3.0">
+                <small class="text-muted">預設 10% AA 溶液</small>
+              </div>
+              <div class="col-6">
+                <label class="form-label">脂肪乳劑 (g/kg/day)</label>
+                <input type="number" class="form-control" id="lipidDose" step="0.1" min="0" value="2.0">
+                <small class="text-muted">預設 20% Emulsion</small>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="form-label fw-bold text-primary">點滴葡萄糖濃度 (Dextrose %)</label>
+              <div class="input-group">
+                <input type="number" class="form-control border-primary" id="dextrosePercent" step="0.1" min="0" value="10">
+                <span class="input-group-text">%</span>
+              </div>
+              <small class="text-muted">剩餘液體空間將全部作為葡萄糖輸注液</small>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 py-2 mb-2" onclick="calculateTPN()">計算營養數據</button>
+            <button type="button" class="btn btn-outline-secondary w-100 py-2" id="printBtn" onclick="printOrder()" disabled>🖨️ 列印營養處方箋 (PDF)</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側結果區 -->
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header text-success">2. 營養分析與輸注指標</div>
+        <div class="card-body">
+          
+          <div class="row">
+            <div class="col-md-6 mb-2">
+              <div class="result-box" style="background-color: #f8f9fa;">
+                <div class="result-title">總熱量達成率 (Total Calories)</div>
+                <div class="result-value text-primary" id="resTotalKcal">-- <span style="font-size:1rem;">kcal/kg/day</span></div>
+                <small class="text-muted">目標建議: 90 - 120 kcal/kg</small>
+              </div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <div class="result-box" style="background-color: #f8f9fa;">
+                <div class="result-title">葡萄糖輸注速率 (GIR)</div>
+                <div class="result-value" id="resGIR">-- <span style="font-size:1rem;">mg/kg/min</span></div>
+                <small class="text-muted">目標建議: 4.0 - 12.0</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="result-box">
+                <div class="result-title">腸道營養 (EN) 佔比</div>
+                <div class="result-value text-success" id="resEnPercent">-- %</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="result-box">
+                <div class="result-title">非蛋白熱量氮比 (NPC:N)</div>
+                <div class="result-value text-info" id="resNpcn">-- : 1</div>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="mt-3 text-secondary text-center">巨量營養素熱量分佈 (Macronutrients Breakdown)</h6>
+          <div id="macroChartContainer">
+            <canvas id="macroChart"></canvas>
+          </div>
+          
+          <div class="alert alert-light mt-3 border text-muted" style="font-size: 0.85rem;" id="fluidWarning">
+            <strong>ℹ️ 液體分配狀態：</strong> <span id="fluidDetails">請輸入參數進行計算</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 列印專屬區塊 -->
+<div id="print-section" style="display: none;">
+  <div class="print-header">
+    <h2>新生兒 TPN 與腸道營養處方箋</h2>
+    <p>Neonatal Nutritional Prescription</p>
+  </div>
+
+  <div class="print-row">
+    <div>
+      <strong>病歷號:</strong> ___________________<br>
+      <strong>病患姓名:</strong> ___________________
+    </div>
+    <div>
+      <strong>處方日期:</strong> <span id="prtDateTime"></span><br>
+      <strong>體重:</strong> <span id="prtWeight"></span> kg
+    </div>
+  </div>
+
+  <div class="print-box">
+    <h4>一、 液體分配 (Fluid Allocation)</h4>
+    <p><strong>總液體目標:</strong> <span id="prtFluidGoal"></span> ml/kg/day (總量: <span id="prtTotalFluid"></span> ml)</p>
+    <ul>
+      <li><strong>腸道營養 (EN):</strong> <span id="prtEnVol"></span> ml/day</li>
+      <li><strong>靜脈輸液 (PN):</strong> <span id="prtPnVol"></span> ml/day</li>
+    </ul>
+  </div>
+
+  <div class="print-box">
+    <h4>二、 靜脈營養處方 (Parenteral Nutrition)</h4>
+    <table class="print-table">
+      <thead>
+        <tr>
+          <th>成分 (Component)</th>
+          <th>處方劑量 (per kg)</th>
+          <th>配製體積 (Volume)</th>
+          <th>熱量 (Kcal)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>胺基酸 (10% AA)</td>
+          <td><span id="prtAaDose"></span> g/kg/day</td>
+          <td><span id="prtAaVol"></span> ml</td>
+          <td><span id="prtAaKcal"></span> kcal</td>
+        </tr>
+        <tr>
+          <td>脂肪乳劑 (20% Lipid)</td>
+          <td><span id="prtLipidDose"></span> g/kg/day</td>
+          <td><span id="prtLipidVol"></span> ml</td>
+          <td><span id="prtLipidKcal"></span> kcal</td>
+        </tr>
+        <tr>
+          <td>葡萄糖 (<span id="prtDexPercent"></span>% Dextrose)</td>
+          <td>GIR: <strong id="prtGIR"></strong> mg/kg/min</td>
+          <td><span id="prtDexVol"></span> ml</td>
+          <td><span id="prtDexKcal"></span> kcal</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="print-box">
+    <h4>三、 營養指標總結 (Nutritional Summary)</h4>
+    <p><strong>每日總熱量:</strong> <strong style="font-size:1.2em;" id="prtTotalKcal"></strong> kcal/kg/day</p>
+    <p><strong>巨量熱量佔比:</strong> 醣類 <span id="prtCarbPct"></span>% | 蛋白質 <span id="prtProPct"></span>% | 脂肪 <span id="prtFatPct"></span>%</p>
+    <p><strong>非蛋白熱量氮比 (NPC:N Ratio):</strong> <span id="prtNpcn"></span> : 1</p>
+  </div>
+
+  <div class="signature-area">
+    <p><strong>醫師簽章 (Physician):</strong> ___________________________</p>
+    <p><strong>營養師簽章 (Dietitian):</strong> ___________________________</p>
+  </div>
+</div>
+
+<script>
+  let macroChart = null;
+  let latestData = null;
+
+  function calculateTPN() {
+    const w = parseFloat(document.getElementById('weight').value);
+    const fluidGoal = parseFloat(document.getElementById('fluidGoal').value);
+    if (isNaN(w) || isNaN(fluidGoal) || w <= 0 || fluidGoal <= 0) {
+      alert("請輸入正確的體重與液體目標！");
+      return;
+    }
+
+    // 1. 液體計算
+    const totalFluid = fluidGoal * w;
+    const enDensity = parseFloat(document.getElementById('enDensity').value);
+    const enVol_kg = parseFloat(document.getElementById('enVol').value) || 0;
+    const enVol_total = enVol_kg * w;
+    const pnFluid_total = totalFluid - enVol_total;
+
+    if (pnFluid_total < 0) {
+      alert("錯誤：腸道餵食量已超過總液體目標，無法計算 TPN。");
+      return;
+    }
+
+    // 2. TPN 巨量營養素計算
+    const aaDose = parseFloat(document.getElementById('aaDose').value) || 0;
+    const lipidDose = parseFloat(document.getElementById('lipidDose').value) || 0;
+    const dexPercent = parseFloat(document.getElementById('dextrosePercent').value) || 0;
+
+    const aaVol = (aaDose * w) / 0.1;   // 假設 10% AA (0.1 g/ml)
+    const lipidVol = (lipidDose * w) / 0.2; // 假設 20% Lipid (0.2 g/ml)
+    
+    // 扣除 AA 與 Lipid 後的剩餘空間給予 Dextrose (忽略微量元素體積以便於網頁速算)
+    const dexVol = pnFluid_total - aaVol - lipidVol;
+
+    if (dexVol < 0) {
+      alert("錯誤：蛋白質與脂肪乳劑的體積已超過 PN 剩餘液體空間，請調高液體目標或降低劑量。");
+      return;
+    }
+
+    const dexGrams = dexVol * (dexPercent / 100);
+    
+    // 3. GIR 計算公式: (Dextrose_g * 1000) / (Weight * 1440 min)
+    const gir = (dexGrams * 1000) / (w * 1440);
+    
+    // 4. 熱量計算 (Kcal)
+    // TPN: Dextrose 3.4 kcal/g, AA 4.0 kcal/g, 20% Lipid 10 kcal/g (2 kcal/ml)
+    const dexKcal = dexGrams * 3.4;
+    const aaKcal = (aaDose * w) * 4.0;
+    const lipidKcal = (lipidDose * w) * 10.0;
+    const pnKcal = dexKcal + aaKcal + lipidKcal;
+    
+    // EN: 
+    const enKcal = enVol_total * enDensity;
+    
+    const totalKcal = pnKcal + enKcal;
+    const kcal_per_kg = totalKcal / w;
+
+    // 5. 營養指標計算
+    const enPercent = totalKcal > 0 ? (enKcal / totalKcal) * 100 : 0;
+    
+    // NPC:N (非蛋白熱量氮比)
+    // 腸道配方奶中蛋白質佔比假設為總熱量的 10% (簡化估算)，主要由 TPN 精算
+    const totalProteinGrams = (aaDose * w) + ((enKcal * 0.1) / 4); 
+    const nitrogen = totalProteinGrams / 6.25;
+    const nonProteinKcal = totalKcal - (totalProteinGrams * 4);
+    const npcn = nitrogen > 0 ? nonProteinKcal / nitrogen : 0;
+
+    // 巨量佔比
+    const totalCarbKcal = dexKcal + (enKcal * 0.45); // 假設 EN 有 45% 醣
+    const totalFatKcal = lipidKcal + (enKcal * 0.45); // 假設 EN 有 45% 脂肪
+    const totalProKcal = aaKcal + (enKcal * 0.10);
+
+    // 6. UI 更新與渲染
+    document.getElementById('resTotalKcal').innerText = kcal_per_kg.toFixed(1);
+    
+    const girEl = document.getElementById('resGIR');
+    girEl.innerText = gir.toFixed(1);
+    if (gir < 4) girEl.className = "result-value gir-warn";
+    else if (gir > 12) girEl.className = "result-value gir-danger";
+    else girEl.className = "result-value gir-safe";
+
+    document.getElementById('resEnPercent').innerText = `${enPercent.toFixed(1)} %`;
+    document.getElementById('resNpcn').innerText = `${npcn.toFixed(0)} : 1`;
+
+    document.getElementById('fluidDetails').innerHTML = 
+      `總液體 <b>${totalFluid.toFixed(0)} ml</b> = EN <b>${enVol_total.toFixed(0)} ml</b> + PN <b>${pnFluid_total.toFixed(0)} ml</b><br>
+       (PN 空間分配: AA ${aaVol.toFixed(1)}ml + Lipid ${lipidVol.toFixed(1)}ml + 醣類 ${dexVol.toFixed(1)}ml)`;
+
+    updateChart(totalCarbKcal, totalProKcal, totalFatKcal);
+
+    // 7. 儲存列印資料
+    latestData = {
+      w, fluidGoal, totalFluid, enVol_total, pnFluid_total, 
+      aaDose, aaVol, aaKcal, lipidDose, lipidVol, lipidKcal, 
+      dexPercent, dexVol, dexGrams, dexKcal, gir, totalKcal, kcal_per_kg, npcn,
+      carbPct: (totalCarbKcal/totalKcal*100), proPct: (totalProKcal/totalKcal*100), fatPct: (totalFatKcal/totalKcal*100)
+    };
+    document.getElementById('printBtn').disabled = false;
+  }
+
+  function updateChart(carb, pro, fat) {
+    const ctx = document.getElementById('macroChart').getContext('2d');
+    if (macroChart) macroChart.destroy();
+
+    macroChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['醣類 (Carbohydrates)', '蛋白質 (Protein)', '脂肪 (Fat)'],
+        datasets: [{
+          data: [carb.toFixed(1), pro.toFixed(1), fat.toFixed(1)],
+          backgroundColor: ['#0dcaf0', '#d63384', '#ffc107'],
+          borderWidth: 2,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', labels: { boxWidth: 15 } },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const total = context.dataset.data.reduce((a, b) => Number(a) + Number(b), 0);
+                const percent = Math.round((context.parsed / total) * 100);
+                return ` ${context.label}: ${context.parsed} kcal (${percent}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  function printOrder() {
+    if (!latestData) return;
+    
+    document.getElementById('prtDateTime').innerText = new Date().toLocaleString('zh-TW');
+    document.getElementById('prtWeight').innerText = latestData.w.toFixed(2);
+    
+    document.getElementById('prtFluidGoal').innerText = latestData.fluidGoal;
+    document.getElementById('prtTotalFluid').innerText = latestData.totalFluid.toFixed(0);
+    document.getElementById('prtEnVol').innerText = latestData.enVol_total.toFixed(0);
+    document.getElementById('prtPnVol').innerText = latestData.pnFluid_total.toFixed(0);
+    
+    document.getElementById('prtAaDose').innerText = latestData.aaDose;
+    document.getElementById('prtAaVol').innerText = latestData.aaVol.toFixed(1);
+    document.getElementById('prtAaKcal').innerText = latestData.aaKcal.toFixed(1);
+    
+    document.getElementById('prtLipidDose').innerText = latestData.lipidDose;
+    document.getElementById('prtLipidVol').innerText = latestData.lipidVol.toFixed(1);
+    document.getElementById('prtLipidKcal').innerText = latestData.lipidKcal.toFixed(1);
+    
+    document.getElementById('prtDexPercent').innerText = latestData.dexPercent;
+    document.getElementById('prtDexVol').innerText = latestData.dexVol.toFixed(1);
+    document.getElementById('prtDexKcal').innerText = latestData.dexKcal.toFixed(1);
+    document.getElementById('prtGIR').innerText = latestData.gir.toFixed(1);
+    
+    document.getElementById('prtTotalKcal').innerText = latestData.kcal_per_kg.toFixed(1);
+    document.getElementById('prtCarbPct').innerText = latestData.carbPct.toFixed(0);
+    document.getElementById('prtProPct').innerText = latestData.proPct.toFixed(0);
+    document.getElementById('prtFatPct').innerText = latestData.fatPct.toFixed(0);
+    document.getElementById('prtNpcn').innerText = latestData.npcn.toFixed(0);
+
+    window.print();
+  }
+</script>
+
+</body>
+</html>
