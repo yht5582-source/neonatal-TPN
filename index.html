@@ -27,6 +27,52 @@
     .badge-demo { background: #fff3cd; color: #664d03; border: 1px solid #ffecb5; font-weight: normal; }
     .refs { font-size: .8rem; color: #6c757d; }
 
+    /* 教學分頁 */
+    .tab-nav { flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 20px; }
+    .tab-nav .nav-link { background-color: #fff; border: 1px solid #dee2e6; color: #6f42c1; }
+    .tab-nav .nav-link.active { background-color: #6f42c1; border-color: #6f42c1; color: #fff; }
+    .teach-narrow { max-width: 920px; margin: 0 auto; }
+    .teach-badge { background-color: #6f42c1; color: #fff; }
+    .case-meta { font-size: 0.85rem; color: #6c757d; }
+    .case-q { background-color: #f1ebfb; border-left: 4px solid #6f42c1; padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0; }
+    .case-output { background-color: #f8f9fa; border-radius: 8px; padding: 12px 14px; font-size: 0.92rem; font-variant-numeric: tabular-nums; }
+    .case-output dl { display: grid; grid-template-columns: max-content 1fr; gap: 3px 14px; margin: 0; }
+    .case-output dt { font-weight: 600; color: #495057; }
+    .case-output dd { margin: 0; }
+    .case-step { margin: 10px 0 0; }
+    .case-step strong { display: block; color: #59339d; }
+    .case-pit { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 8px 12px; border-radius: 0 8px 8px 0; margin-top: 12px; font-size: 0.92rem; }
+    .case-src, .quiz-src { font-size: 0.8rem; color: #6c757d; margin-top: 8px; }
+    details > summary { cursor: pointer; color: #59339d; font-weight: 600; padding: 4px 0; }
+    .quiz-bar { position: sticky; top: 0; z-index: 5; background-color: #f4f6f9; padding: 8px 0; margin-bottom: 8px; }
+    .quiz-opt { display: block; width: 100%; text-align: left; background-color: #fff; border: 1px solid #ced4da; border-radius: 8px; padding: 9px 12px; margin-bottom: 7px; color: #212529; }
+    .quiz-opt:hover:enabled { background-color: #f6f2fd; border-color: #6f42c1; }
+    .quiz-opt:disabled { color: #212529; opacity: 1; }
+    .quiz-opt.right { background-color: #d1e7dd; border-color: #198754; font-weight: 600; }
+    .quiz-opt.wrong { background-color: #f8d7da; border-color: #dc3545; }
+    .quiz-exp { background-color: #f8f9fa; border-radius: 8px; padding: 10px 12px; margin-top: 8px; font-size: 0.93rem; }
+    .mm-root { display: inline-block; background-color: #212529; color: #fff; font-weight: 700; border-radius: 10px; padding: 10px 18px; }
+    .mm-branches { margin: 14px 0 0 18px; padding-left: 24px; }
+    .mm-branch { position: relative; display: grid; grid-template-columns: 170px 1fr; gap: 26px; padding: 8px 0; }
+    .mm-branch::before { content: ''; position: absolute; left: -24px; top: 28px; width: 24px; border-top: 2px solid #adb5bd; }
+    .mm-branch::after { content: ''; position: absolute; left: -24px; top: 0; bottom: 0; border-left: 2px solid #adb5bd; }
+    .mm-branch:last-child::after { bottom: auto; height: 28px; }
+    .mm-head { position: relative; align-self: start; width: 100%; min-height: 40px; border: 0; border-radius: 8px; padding: 8px 10px; color: #fff; font-weight: 700; text-align: left; background-color: var(--mm); }
+    .mm-head::after { content: '▾'; float: right; }
+    .mm-head[aria-expanded="false"]::after { content: '▸'; }
+    .mm-leaves { list-style: none; margin: 0; padding: 0 0 0 16px; border-left: 3px solid var(--mm); }
+    .mm-leaves li { background-color: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 6px 10px; margin-bottom: 6px; font-size: 0.92rem; }
+    .mm-leaves li b { margin-right: 6px; }
+    .mm-tag { font-size: 0.72rem; color: #6c757d; white-space: nowrap; margin-left: 6px; }
+    @media (max-width: 767.98px) {
+      .mm-branches { margin-left: 6px; padding-left: 16px; }
+      .mm-branch { grid-template-columns: 1fr; gap: 6px; }
+      .mm-branch::before { left: -16px; width: 16px; top: 28px; }
+      .mm-branch::after { left: -16px; }
+      .case-output dl { grid-template-columns: 1fr; }
+      .case-output dt { margin-top: 4px; }
+    }
+
     @media print {
       .d-print-none { display: none !important; }
       body { background-color: #fff; color: #000; font-size: 11pt; }
@@ -45,8 +91,16 @@
 
 <div class="container py-4 d-print-none">
   <h2 class="text-center mb-1" style="color: #6f42c1;">新生兒 TPN 與腸道營養計算器</h2>
-  <p class="text-center text-muted small mb-4">輸入即時計算 · 參考 ESPGHAN/ESPEN/ESPR/CSPEN 2018 小兒 PN 指引與 ESPGHAN 2022 早產兒腸道營養建議</p>
+  <p class="text-center text-muted small mb-3">輸入即時計算 · 參考 ESPGHAN/ESPEN/ESPR/CSPEN 2018 小兒 PN 指引與 ESPGHAN 2022 早產兒腸道營養建議</p>
 
+  <ul class="nav nav-pills tab-nav" id="tabNav">
+    <li class="nav-item"><a class="nav-link active" href="#calc" data-view="calc" aria-current="page">計算機</a></li>
+    <li class="nav-item"><a class="nav-link" href="#cases" data-view="cases">示範病例</a></li>
+    <li class="nav-item"><a class="nav-link" href="#quiz" data-view="quiz">考題</a></li>
+    <li class="nav-item"><a class="nav-link" href="#map" data-view="map">心智圖</a></li>
+  </ul>
+
+  <div id="view-calc">
   <div class="row">
     <!-- 左側輸入區 -->
     <div class="col-lg-5">
@@ -83,6 +137,15 @@
                 <label class="form-label" for="dol">出生後第幾天</label>
                 <input type="number" inputmode="numeric" class="form-control" id="dol" step="1" min="1" value="2">
                 <small class="text-muted">第 1 天 = 出生當天</small>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="phase">臨床階段</label>
+                <select class="form-select" id="phase">
+                  <option value="recovery" selected>一般／恢復期</option>
+                  <option value="stable">加護穩定期（可脫離器官支持）</option>
+                  <option value="acute">急性期（需器官支持，或感染／敗血症）</option>
+                </select>
+                <small class="text-muted">影響 &lt;28 天的 GIR 目標與足月兒 PN 熱量目標</small>
               </div>
             </div>
 
@@ -205,7 +268,7 @@
               <div class="result-box">
                 <div class="result-title">NPC:N</div>
                 <div class="result-value text-info"><span id="resNpcn">--</span> <span class="unit">: 1</span></div>
-                <small class="text-muted">參考 150–250</small>
+                <small class="text-muted" id="npcNote">NICE 約 125–188</small>
               </div>
             </div>
           </div>
@@ -233,17 +296,23 @@
         <div class="card-header text-secondary">參考依據與限制</div>
         <div class="card-body refs">
           <ul class="mb-2 ps-3">
-            <li>GIR：早產兒第 1 天 4–8、第 2 天起目標 8–10；足月兒第 1 天 2.5–5、第 2 天起 5–10；上限 12 mg/kg/min（Mesotten et al., Clin Nutr 2018;37:2337）。</li>
-            <li>胺基酸：早產兒第 1 天 ≥1.5、第 2 天起 2.5–3.5、不超過 3.5；足月兒 1.5–3.0 g/kg/day（van Goudoever et al., Clin Nutr 2018;37:2315）。</li>
-            <li>脂肪乳劑：不超過 4 g/kg/day（Lapillonne et al., Clin Nutr 2018;37:2324）。</li>
-            <li>熱量：PN 早產兒 90–120、足月兒 75–85 kcal/kg/day（Joosten et al., Clin Nutr 2018;37:2309）；早產兒全腸道 115–140 kcal/kg/day、蛋白質 3.5–4.0 g/kg/day（Embleton et al., JPGN 2023;76:248）。</li>
-            <li>周邊靜脈：葡萄糖 ≤12.5%、估計滲透壓 ≤900 mOsm/L（ASPEN）。滲透壓估算 = 葡萄糖 5 + 胺基酸 10 mOsm/g，<b>未含電解質</b>，實際值更高。</li>
+            <li>GIR：早產兒第 1 天 4–8、第 2 天起目標 8–10；足月兒第 1 天 2.5–5、第 2 天起 5–10；上限 12 mg/kg/min。&lt;28 天急性病暫回第 1 天供應量（Mesotten et al., Clin Nutr 2018;37:2337，R5.4、5.5）。</li>
+            <li>胺基酸：早產兒第 1 天 ≥1.5、第 2 天起 2.5–3.5、不超過 3.5；足月兒 1.5–3.0 g/kg/day（van Goudoever et al., Clin Nutr 2018;37:2315）。ASPEN 2023 早產兒：起始不超過 3、目標 3–3.5（Robinson et al., JPEN 2023）。</li>
+            <li>脂肪乳劑：不超過 4 g/kg/day（Lapillonne et al., Clin Nutr 2018;37:2324）；ASPEN 2023 建議早產兒加到 3 g/kg/day。</li>
+            <li>熱量：PN 早產兒第 1 天至少 45–55、之後 90–120；0–1 歲急性期 45–50、穩定期 60–65、恢復期 75–85 kcal/kg/day（Joosten et al., Clin Nutr 2018;37:2309）。早產兒全腸道 115–140 kcal/kg/day、蛋白質 3.5–4.0 g/kg/day（Embleton et al., JPGN 2023;76:248）。足月兒腸道 100–120 kcal/kg/day（Merck Manual，非 PN 指引）。</li>
+            <li>NPC:N：工具顯示 kcal/g 氮；NICE NG154 為非氮熱量 20–30 kcal/g 胺基酸，換算約 125–188（×6.25）。ESPGHAN 另要求早產兒第 2 天起非蛋白熱量 &gt;65 kcal/kg/day。</li>
+            <li>周邊靜脈：估計滲透壓 ≤900 mOsm/L（ASPEN：Boullata 2014 弱建議、Worthington 2017 建議 6C；ESPGHAN R14.22）。最終葡萄糖 12.5% 不是指引上限：Worthington 2017 指成人約 &lt;10%，小兒用到 12.5% 較常見。滲透壓估算 = 葡萄糖 5 + 胺基酸 10 mOsm/g，<b>未含電解質</b>，實際值更高。</li>
           </ul>
           未扣除脂肪乳劑以外的維生素體積（請用「其他靜脈液體」欄位輸入）。奶類組成為典型估計值。本工具僅供臨床人員速算參考，不能取代醫師與營養師的獨立臨床判斷。
         </div>
       </div>
     </div>
   </div>
+  </div>
+
+  <div id="view-cases" class="teach-narrow" hidden></div>
+  <div id="view-quiz" class="teach-narrow" hidden></div>
+  <div id="view-map" hidden></div>
 </div>
 
 <!-- 列印專屬區塊 -->
@@ -344,12 +413,21 @@ const TPN = (() => {
   };
 
   // ESPGHAN 2018：GIR 依族群與日齡
-  function girRange(pop, dol) {
-    if (pop === 'term') return dol <= 1 ? { lo: 2.5, hi: 5 } : { lo: 5, hi: 10 };
-    return dol <= 1 ? { lo: 4, hi: 8 } : { lo: 8, hi: 10 };
+  // <28 天急性病（感染、敗血症）暫時回到第 1 天供應量（R5.5）
+  function girRange(pop, dol, phase) {
+    const first = dol <= 1 || (phase === 'acute' && dol < 28);
+    if (pop === 'term') return first ? { lo: 2.5, hi: 5 } : { lo: 5, hi: 10 };
+    return first ? { lo: 4, hi: 8 } : { lo: 8, hi: 10 };
   }
   const GIR_MIN = { preterm: 4, term: 2.5 };
   const GIR_MAX = 12;
+  const EPS = 1e-9;                                         // 避免 3.5×w÷w 這類浮點誤差誤觸門檻
+  // ESPGHAN 2018 Energy Table 2：0–1 歲 PN 熱量依階段
+  const TERM_KCAL = {
+    acute: { lo: 45, hi: 50, label: '足月兒 PN 急性期 45–50' },
+    stable: { lo: 60, hi: 65, label: '足月兒 PN 穩定期 60–65' },
+    recovery: { lo: 75, hi: 85, label: '足月兒 PN 恢復期 75–85' }
+  };
 
   function num(v) { const n = typeof v === 'number' ? v : parseFloat(v); return Number.isFinite(n) ? n : NaN; }
 
@@ -358,6 +436,7 @@ const TPN = (() => {
     const w = num(inp.weight), fluidGoal = num(inp.fluidGoal);
     const pop = inp.population === 'term' ? 'term' : 'preterm';
     const dol = Math.max(1, Math.floor(num(inp.dol) || 1));
+    const phase = TERM_KCAL[inp.phase] ? inp.phase : 'recovery';
     const val = (k, d = 0) => { const n = num(inp[k]); return Number.isNaN(n) ? d : n; };
     const enVolKg = val('enVol'), enDensity = val('enDensity'), enProtein = val('enProtein');
     const aaDose = val('aaDose'), lipidDose = val('lipidDose'), dexPct = val('dextrosePercent'), otherIV = val('otherIV');
@@ -405,6 +484,7 @@ const TPN = (() => {
     const proteinKg = proteinG / w;
     const nitrogen = proteinG / 6.25;
     const npcn = nitrogen > 0 ? (totalKcal - proteinG * 4) / nitrogen : null;
+    const npKcalKg = (totalKcal - proteinG * 4) / w;
 
     const carbKcal = dexKcal + enCarbKcal, proKcal = aaKcal + enProKcal, fatKcal = lipidKcal + enFatKcal;
     const pct = x => totalKcal > 0 ? x / totalKcal * 100 : 0;
@@ -415,7 +495,7 @@ const TPN = (() => {
     const osm = bagVol > 0 ? (dexG * 5 + aaG * 10) / bagVol * 1000 : 0;
 
     // 4. 警示
-    const gr = girRange(pop, dol);
+    const gr = girRange(pop, dol, phase);
     const minGir = GIR_MIN[pop];
     let girLevel = 'ok';
     if (gir > GIR_MAX) { girLevel = 'danger'; warnings.push({ lvl: 'danger', msg: `GIR ${gir.toFixed(1)} 超過上限 12 mg/kg/min，高血糖與脂肪生成風險` }); }
@@ -424,30 +504,39 @@ const TPN = (() => {
 
     const aaMax = pop === 'term' ? 3.0 : 3.5;
     if (aaDose > aaMax) warnings.push({ lvl: 'warn', msg: `胺基酸 ${aaDose} g/kg/day 超過${pop === 'term' ? '足月兒' : '早產兒'}建議上限 ${aaMax}` });
-    if (pop === 'preterm' && proteinKg < 1.5) warnings.push({ lvl: 'warn', msg: '早產兒出生第 1 天起胺基酸應 ≥1.5 g/kg/day' });
+    if (pop === 'preterm' && proteinKg < 1.5 - EPS) warnings.push({ lvl: 'warn', msg: '早產兒出生第 1 天起胺基酸應 ≥1.5 g/kg/day' });
     if (lipidDose > 4) warnings.push({ lvl: 'danger', msg: `脂肪乳劑 ${lipidDose} g/kg/day 超過上限 4 g/kg/day` });
     if (peripheral) {
-      if (finalDex > 12.5) warnings.push({ lvl: 'danger', msg: `周邊靜脈：AA+葡萄糖袋最終葡萄糖濃度 ${finalDex.toFixed(1)}% > 12.5%，需中心靜脈` });
+      if (finalDex > 12.5) warnings.push({ lvl: 'warn', msg: `周邊靜脈：AA+葡萄糖袋最終葡萄糖濃度 ${finalDex.toFixed(1)}% > 12.5%（小兒周邊常見做法的高限，非指引硬性上限），建議中心靜脈` });
       if (osm > 900) warnings.push({ lvl: 'danger', msg: `周邊靜脈：估計滲透壓 ≥${osm.toFixed(0)} mOsm/L > 900（未含電解質）` });
     }
     if (fluidGoal > 180) warnings.push({ lvl: 'warn', msg: `總液體 ${fluidGoal} ml/kg/day 偏高，注意 PDA/BPD 與液體過量` });
     if (dexPct > 0 && dexVol < 1e-9 && pnVol > 0) warnings.push({ lvl: 'warn', msg: '剩餘空間為 0，葡萄糖未給予' });
 
+    if (phase === 'acute' && dol < 28 && dol > 1) warnings.push({ lvl: 'info', msg: `急性期：葡萄糖暫回第 1 天供應量 ${gr.lo}–${gr.hi} mg/kg/min（依血糖調整），穩定後要逐步加回` });
+
     const enDominant = enPct >= 50;
+    const pretermPn = dol <= 1
+      ? { lo: 45, hi: 120, label: '早產兒第 1 天至少 45–55' }
+      : phase === 'acute'
+        ? { lo: 90, hi: 120, label: '早產兒 PN 90–120（急性期可暫低於）', soft: true }
+        : { lo: 90, hi: 120, label: '早產兒 PN 90–120' };
     const kcalRange = pop === 'term'
-      ? (enDominant ? { lo: 100, hi: 120, label: '足月兒腸道 100–120' } : { lo: 75, hi: 85, label: '足月兒 PN 75–85' })
-      : (enDominant ? { lo: 115, hi: 140, label: '早產兒腸道 115–140' } : { lo: 90, hi: 120, label: '早產兒 PN 90–120' });
-    const kcalLevel = kcalKg < kcalRange.lo ? 'warn' : kcalKg > kcalRange.hi + 10 ? 'warn' : 'ok';
-    const proRange = pop === 'term' ? { lo: 1.5, hi: 3.0 } : (enDominant ? { lo: 3.5, hi: 4.0 } : { lo: 2.5, hi: 3.5 });
-    const proLevel = proteinKg < proRange.lo || proteinKg > proRange.hi + 0.5 ? 'warn' : 'ok';
+      ? (enDominant ? { lo: 100, hi: 120, label: '足月兒腸道 100–120' } : TERM_KCAL[phase])
+      : (enDominant ? { lo: 115, hi: 140, label: '早產兒腸道 115–140' } : pretermPn);
+    const kcalLevel = (kcalKg < kcalRange.lo - EPS && !kcalRange.soft) || kcalKg > kcalRange.hi + 10 ? 'warn' : 'ok';
+    const proRange = pop === 'term' ? { lo: 1.5, hi: 3.0 }
+      : enDominant ? { lo: 3.5, hi: 4.0 }
+      : dol <= 1 ? { lo: 1.5, hi: 3.5 } : { lo: 2.5, hi: 3.5 };
+    const proLevel = proteinKg < proRange.lo - EPS || proteinKg > proRange.hi + 0.5 + EPS ? 'warn' : 'ok';
 
     return {
-      ok: true, errors, warnings, pop, dol, peripheral, milk,
+      ok: true, errors, warnings, pop, dol, phase, peripheral, milk,
       w, fluidGoal, totalFluid, enVolKg, enVol, enDensity, enProtein, ivFluid, otherIV, pnVol,
       aaDose, aaG, aaVol, aaKcal, lipidDose, lipidG, lipidVol, lipidKcal,
       dexPct, dexVol: Math.max(0, dexVol), dexG, dexKcal, gir, girLevel, girRange: gr,
       enKcal, pnKcal, totalKcal, kcalKg, kcalRange, kcalLevel, enPct,
-      proteinG, proteinKg, proRange, proLevel, npcn,
+      proteinG, proteinKg, proRange, proLevel, npcn, npKcalKg,
       carbKcal, proKcal, fatKcal, carbPct: pct(carbKcal), proPct: pct(proKcal), fatPct: pct(fatKcal),
       bagVol, finalDex, osm,
       rates: { bag: bagVol / 24, lipid: lipidVol / 24, other: otherIV / 24, feedQ3: enVol / 8, feedQ2: enVol / 12 }
@@ -459,8 +548,257 @@ const TPN = (() => {
 if (typeof module !== 'undefined') module.exports = TPN;
 /*ENGINE-END*/
 
+/*TEACH-START*/
+// 教學內容（無 DOM），由 tests.cjs 載入並與引擎交叉核對
+var TEACH = (function () {
+  var R = 'https://doi.org/10.1016/j.clnu.2018.06.';
+  var SRC = [
+    { k: 'Energy', t: 'Joosten K et al. ESPGHAN/ESPEN/ESPR/CSPEN PN guidelines: Energy. Clin Nutr 2018;37:2309', r: '建議條文、Table 2', u: R + '944' },
+    { k: 'AA', t: 'van Goudoever JB et al. PN guidelines: Amino acids. Clin Nutr 2018;37:2315', r: '建議條文', u: R + '945' },
+    { k: 'Lipids', t: 'Lapillonne A et al. PN guidelines: Lipids. Clin Nutr 2018;37:2324', r: '建議條文', u: R + '946' },
+    { k: 'Carbohydrates', t: 'Mesotten D et al. PN guidelines: Carbohydrates. Clin Nutr 2018;37:2337', r: '建議條文', u: R + '947' },
+    { k: 'Fluid', t: 'Jochum F et al. PN guidelines: Fluid and electrolytes. Clin Nutr 2018;37:2344', r: '建議條文、新生兒第一期液體電解質表', u: R + '948' },
+    { k: 'Minerals', t: 'Mihatsch W et al. PN guidelines: Calcium, phosphorus and magnesium. Clin Nutr 2018;37:2360', r: '建議條文', u: R + '950' },
+    { k: 'Access', t: 'Kolaček S et al. PN guidelines: Venous access. Clin Nutr 2018;37:2379', r: 'R10.1–10.20', u: R + '952' },
+    { k: 'Standard', t: 'Riskin A et al. PN guidelines: Standard versus individualized PN. Clin Nutr 2018;37:2409', r: '建議條文', u: R + '955' },
+    { k: 'Complications', t: 'Hartman C et al. PN guidelines: Complications. Clin Nutr 2018;37:2418', r: '建議條文', u: R + '956' },
+    { k: 'Embleton', t: 'Embleton ND et al. Enteral Nutrition in Preterm Infants (2022). JPGN 2023;76:248', r: '水分、熱量、蛋白質、餵食進展與殘餘量章節', u: 'https://doi.org/10.1097/MPG.0000000000003642' },
+    { k: 'PEPaNIC', t: 'Fivez T et al. Early versus Late Parenteral Nutrition in Critically Ill Children. N Engl J Med 2016;374:1111', r: '摘要', u: 'https://doi.org/10.1056/NEJMoa1514762' },
+    { k: 'Boullata 2014', t: 'Boullata JI et al. A.S.P.E.N. Clinical Guidelines: PN Ordering, Order Review, Compounding, Labeling, and Dispensing. JPEN 2014;38:334', r: 'Question 2 建議', u: 'https://doi.org/10.1177/0148607114521833' },
+    { k: 'Worthington 2017', t: 'Worthington P et al. When Is Parenteral Nutrition Appropriate? JPEN 2017;41:324', r: '周邊 PN 建議 6A–6D 與說明', u: 'https://doi.org/10.1177/0148607117695251' },
+    { k: 'ASPEN 2023', t: 'Robinson DT et al. Guidelines for parenteral nutrition in preterm infants: ASPEN. JPEN 2023', r: 'Questions 1–12 建議', u: 'https://doi.org/10.1002/jpen.2550' },
+    { k: 'ASPEN Starter 2026', t: 'ASPEN. Clinical Considerations for Neonatal Starter Parenteral Nutrition. 2026-09-02', r: '定義、組成', u: 'https://nutritioncare.org/wp-content/uploads/2026/09/Clinical-Considerations-Neonatal-Starter-PN.pdf' },
+    { k: 'NICE NG154', t: 'NICE NG154. Neonatal parenteral nutrition', r: '建議 1.2.1、1.5.6', u: 'https://www.nice.org.uk/guidance/ng154/chapter/Recommendations' },
+    { k: 'Merck', t: 'Merck Manual Professional. Nutrition and Feeding in Infants', r: '熱量需求表', u: 'https://www.merckmanuals.com/professional/pediatrics/care-of-newborns-and-infants/nutrition-and-feeding-in-infants' },
+    { k: 'PEPaNIC 新生兒', t: 'van Puffelen E et al. Early versus late PN in critically ill, term neonates. Lancet Child Adolesc Health 2018', r: '摘要', u: 'https://doi.org/10.1016/S2352-4642(18)30131-7' }
+  ];
+
+  function I(o) {
+    return Object.assign({ population: 'preterm', phase: 'recovery', enType: 'preterm', enVol: 0, enDensity: 0.8, enProtein: 3.0, otherIV: 0, access: 'central' }, o);
+  }
+  var HM = { enType: 'hm', enDensity: 0.67, enProtein: 1.5 };
+  var HMF = { enType: 'hmf', enDensity: 0.8, enProtein: 3.0 };
+
+  // input = 帶入計算機的值；alts = 比較方案；expect = tests.cjs 與 TPN.calc() 比對的數字（四捨五入後）
+  var CASES = [
+    {
+      id: 'c1', title: 'ELBW 第 1 天：液體就這麼多', tag: '起始處方',
+      who: '26 週、IUGR，出生體重 850 g，出生第 1 天',
+      story: '插管、NPO，UVC 已放好。母親產前接受硫酸鎂。藥物與沖管液約 10 ml/day。住院醫師初稿：液體 90 ml/kg/day、胺基酸 2、脂肪 1 g/kg/day、D10。',
+      ask: '初稿的 GIR 與熱量夠嗎？不增加液體要怎麼改？電解質與鈣磷鎂怎麼開？',
+      input: I({ weight: 0.85, fluidGoal: 90, dol: 1, aaDose: 2.5, lipidDose: 1.5, dextrosePercent: 15, otherIV: 10 }),
+      expect: { gir: 4.8, kcal: 48.3, pro: 2.5, osm: 838, finalDex: 9.7, totalFluid: 76.5, pnVol: 66.5 },
+      alts: [{ label: '初稿（AA 2、脂肪 1、D10）', input: I({ weight: 0.85, fluidGoal: 90, dol: 1, aaDose: 2, lipidDose: 1, dextrosePercent: 10, otherIV: 10 }), expect: { gir: 3.7, kcal: 36.1, pro: 2, osm: 637 } }],
+      steps: [
+        { h: '液體空間', t: '<1000 g 第 1 天建議 80–100 ml/kg/day，選 90 = 76.5 ml。其他靜脈 10 ml 佔掉 13%，PN 只剩 66.5 ml。' },
+        { h: '初稿不足', t: 'GIR 3.7（低於早產兒最低 4）、熱量 36.1 kcal/kg，未達第 1 天至少 45–55 kcal/kg。' },
+        { h: '不加水的改法', t: 'AA 2.5、脂肪 1.5、D15：GIR 4.8（第 1 天範圍 4–8）、熱量 48.3 kcal/kg、最終葡萄糖 9.7%、估計 ≥838 mOsm/L，只適合中心靜脈。' },
+        { h: '鈉鉀', t: '確認有尿後，Na、K 可從第 1 天給，並注意非寡尿性高血鉀。此期表列 Na 0–2（3）、K 0–3 mmol/kg/day。' },
+        { h: '鈣磷鎂', t: '早期 Ca 0.8–2.0、P 1.0–2.0 mmol/kg/day，Ca:P 莫耳比 0.8–1.0。IUGR 要密切追血磷，防嚴重低血磷。母親用過鎂，Mg 依出生後血中濃度調整。' }
+      ],
+      pitfall: '第 1 天真正的限制是液體空間。工具不會提醒「其他靜脈液體」佔掉多少，藥物稀釋液多開幾 ml，葡萄糖就得更濃；液體建議範圍也要自己對照。',
+      src: ['Carbohydrates R5.4', 'AA R3.1', 'Lipids R4.2', 'Energy R2.4', 'Fluid R6.3–6.6', 'Minerals R8.5、8.9–8.12']
+    },
+    {
+      id: 'c2', title: '高血糖：先動 GIR，不是砍胺基酸', tag: '血糖',
+      who: '25 週，720 g，出生第 3 天',
+      story: '液體 130 ml/kg/day、胺基酸 3、脂肪 2、D20，其他靜脈 6 ml/day。血糖連續兩次 230 mg/dL（12.8 mmol/L）。',
+      ask: '目前 GIR 是多少？第一步調什麼？何時才考慮胰島素？',
+      input: I({ weight: 0.72, fluidGoal: 130, dol: 3, aaDose: 3, lipidDose: 2, dextrosePercent: 15, otherIV: 6 }),
+      expect: { gir: 8.5, kcal: 73.7, pro: 3, osm: 817, finalDex: 11 },
+      alts: [
+        { label: '原處方 D20', input: I({ weight: 0.72, fluidGoal: 130, dol: 3, aaDose: 3, lipidDose: 2, dextrosePercent: 20, otherIV: 6 }), expect: { gir: 11.3, kcal: 87.5, pro: 3, osm: 1000 } },
+        { label: '再降到 D12.5', input: I({ weight: 0.72, fluidGoal: 130, dol: 3, aaDose: 3, lipidDose: 2, dextrosePercent: 12.5, otherIV: 6 }), expect: { gir: 7.1, kcal: 66.7, pro: 3, osm: 726 } }
+      ],
+      steps: [
+        { h: '定位', t: 'D20 的 GIR 11.3，高於第 2 天起目標 8–10，也接近上限 12。過量葡萄糖會造成高血糖、脂肪生成與肝脂肪變性。' },
+        { h: '門檻', t: 'NICU 應避免 >8 mmol/L（145 mg/dL）。反覆 >10 mmol/L（180 mg/dL）時，先合理調整 GIR，不足才用胰島素。ASPEN 2023 也反對為了促進生長而常規使用胰島素。' },
+        { h: '第一步', t: '改 D15，GIR 8.5、熱量 73.7 kcal/kg。若仍反覆過高再降到 D12.5，GIR 7.1：低於目標但高於最低 4，屬暫時措施。' },
+        { h: '找原因', t: '把藥物與沖管液裡的葡萄糖一起算，並評估是否合併感染。血糖最好用血氣分析儀等驗證過的設備量。' },
+        { h: '蛋白質別先砍', t: 'AA 3 在 2.5–3.5 內，建議搭配非蛋白熱量 >65 kcal/kg/day。D15 時 73.7 − 12 = 61.7，略低；血糖穩定後再補，脂肪每加 0.5 g/kg 約多 5 kcal/kg。' }
+      ],
+      pitfall: '工具的 GIR 只算 PN 袋內葡萄糖。「其他靜脈液體」不計熱量也不計糖，用含糖液當藥物稀釋液時，實際 GIR 更高。',
+      src: ['Carbohydrates R5.1、5.2、5.4、5.7、5.10、5.11', 'AA R3.2', 'ASPEN 2023 Q12']
+    },
+    {
+      id: 'c3', title: '銜接期：PN 減量後，蛋白質掉在哪', tag: 'PN → EN',
+      who: '30 週出生，1250 g，出生第 12 天',
+      story: '母乳已加到 120 ml/kg/day，總液體 160 ml/kg/day，PN 降為胺基酸 1、脂肪 1、D10。生長開始變慢，血糖穩定、腹部無異常。',
+      ask: '未強化與強化母乳差多少？下一步奶怎麼加？PN 停掉之後夠嗎？',
+      input: I(Object.assign({ weight: 1.25, fluidGoal: 160, dol: 12, enVol: 120, aaDose: 1, lipidDose: 1, dextrosePercent: 10 }, HMF)),
+      expect: { gir: 1.7, kcal: 118.5, pro: 3.9, enPct: 81 },
+      alts: [
+        { label: '同量未強化母乳', input: I(Object.assign({ weight: 1.25, fluidGoal: 160, dol: 12, enVol: 120, aaDose: 1, lipidDose: 1, dextrosePercent: 10 }, HM)), expect: { gir: 1.7, kcal: 102.9, pro: 2.2 } },
+        { label: '停 PN，強化母乳 150', input: I(Object.assign({ weight: 1.25, fluidGoal: 150, dol: 14, enVol: 150, aaDose: 0, lipidDose: 0, dextrosePercent: 0 }, HMF)), expect: { kcal: 120, pro: 3.6 } },
+        { label: '停 PN，未強化母乳 150', input: I(Object.assign({ weight: 1.25, fluidGoal: 150, dol: 14, enVol: 150, aaDose: 0, lipidDose: 0, dextrosePercent: 0 }, HM)), expect: { kcal: 100.5, pro: 1.5 } }
+      ],
+      steps: [
+        { h: '比較', t: '同樣 120 ml/kg/day：未強化 102.9 kcal/kg、蛋白質 2.2 g/kg；強化 118.5 kcal/kg、蛋白質 3.9 g/kg。腸道為主的目標是 115–140 kcal/kg、蛋白質至少 3.5–4.0 g/kg。' },
+        { h: '停 PN 的試算', t: '只餵 150 ml/kg/day：未強化 100.5 kcal/kg、蛋白質 1.5 g/kg；強化 120 kcal/kg、蛋白質 3.6 g/kg。沒有強化，停 PN 當天蛋白質就落到目標一半以下。' },
+        { h: '加奶速度', t: '穩定早產兒的常規每日增量為 18–30 ml/kg/day。多數需要 150–180 ml/kg/day 水分才達營養目標。' },
+        { h: '殘餘量', t: '臨床穩定不常規抽胃殘餘量；有明顯腹脹、壓痛、嘔吐、血便、呼吸暫停或體溫不穩才評估。' },
+        { h: '流程', t: 'PN 轉 EN 是累積營養缺口的關鍵期。ESPGHAN 建議各 NICU 訂標準餵食流程，含全腸道定義與強化策略。' }
+      ],
+      pitfall: 'GIR 1.7 會跳「低於最低 4」的警示。腸道已是主要來源且血糖穩定時可接受；這是提醒查血糖，不是要加濃葡萄糖。奶類蛋白質為典型值，請依實際 HMF 標示修改。',
+      src: ['Embleton 2023（水分、熱量、蛋白質、餵食進展、殘餘量）']
+    },
+    {
+      id: 'c4', title: '只有周邊靜脈：處方被滲透壓卡住', tag: '周邊 PN',
+      who: '33 週，1.9 kg，出生第 2 天',
+      story: '呼吸窘迫、暫時 NPO，UVC 放置失敗，只有周邊靜脈。液體 90 ml/kg/day、胺基酸 3、脂肪 2。醫師想用 D20 把 GIR 拉上來。',
+      ask: 'D20 可以走周邊嗎？改了之後還差多少？什麼時候該放中心導管？',
+      input: I({ weight: 1.9, fluidGoal: 90, dol: 2, aaDose: 3, lipidDose: 2, dextrosePercent: 12.5, access: 'peripheral' }),
+      expect: { gir: 4.3, kcal: 53.3, pro: 3, osm: 766, finalDex: 7.8, bagVol: 152 },
+      alts: [{ label: '初稿 D20', input: I({ weight: 1.9, fluidGoal: 90, dol: 2, aaDose: 3, lipidDose: 2, dextrosePercent: 20, access: 'peripheral' }), expect: { gir: 6.9, kcal: 66, pro: 3, osm: 1000 } }],
+      steps: [
+        { h: '先看袋子', t: 'D20 的 GIR 6.9，但與 AA 混合後最終葡萄糖 12.5%，估計 ≥1000 mOsm/L，超過周邊上限 900。ASPEN 與 ESPGHAN 的硬性指標都是 900 mOsm/L；12.5% 只是小兒的常見做法。' },
+        { h: '退一步', t: '改 D12.5：估計 ≥766 mOsm/L、最終葡萄糖 7.8%，代價是 GIR 4.3、熱量 53.3 kcal/kg。' },
+        { h: '電解質還沒算', t: '工具未含電解質。若加 Na 2、K 2 mmol/kg/day，鹽類約 8 mOsm/kg，1.9 kg 共 15.2 mOsm，除以 152 ml 袋量約多 100 mOsm/L，來到約 866，已接近上限。' },
+        { h: '差距', t: 'GIR 4.3 低於第 2 天起目標 8–10，熱量也遠低於 90–120。周邊 PN 只適合短期，不是達標的方法。' },
+        { h: '何時換', t: 'NICE 僅在預期短期（例如 <5 天）等情況才考慮周邊。預期更久就安排 PICC 或隧道式導管；PN 盡量走專用管腔。' }
+      ],
+      pitfall: '沒跳警示不等於安全：工具只在估計值 >900 時警示，而估計值未含電解質、鈣、鎂與添加物。',
+      src: ['Complications R14.21、14.22', 'Access R10.1、10.3、10.5', 'Carbohydrates R5.4', 'Energy R2.6', 'Boullata 2014 Q2', 'Worthington 2017 6C、6D', 'NICE NG154 1.2.1', '電解質滲透壓為本頁算術估計']
+    },
+    {
+      id: 'c5', title: '足月兒術後：第一週與穩定後不一樣', tag: '足月・外科',
+      who: '38 週足月，3.2 kg，腹裂修補術後，出生第 8 天',
+      story: '前幾天使用呼吸器與升壓劑，現已穩定拔管，預期至少再一週無法足量腸道餵食。其他靜脈 15 ml/day。團隊在討論：前一週沒開 PN 是否錯了？現在該開多少？',
+      ask: '重症足月兒第一週可以不給 PN 嗎？穩定後的目標是什麼？這個建議能套用到早產兒嗎？',
+      input: I({ population: 'term', enType: 'term', enDensity: 0.67, enProtein: 2.1, weight: 3.2, fluidGoal: 120, dol: 8, aaDose: 3, lipidDose: 3, dextrosePercent: 15, otherIV: 15 }),
+      expect: { gir: 7.3, kcal: 77.9, pro: 3, osm: 825, finalDex: 10.5 },
+      alts: [],
+      steps: [
+        { h: '第一週', t: '重症足月兒在給微量營養素的前提下，可考慮延後 PN 1 週（條件式建議）。依據 PEPaNIC：新生兒次分析中，≤4 週者延後組較早存活出 PICU（aHR 1.61），感染風險無差異；≤1 週者感染較少（aOR 0.36）；各年齡組死亡率相近。' },
+        { h: '不能外推', t: '這條建議的對象是足月兒與較大孩童。早產兒的建議仍是出生第 1 天就給胺基酸，脂肪最遲第 2 天。' },
+        { h: '現在的處方', t: '液體 120 ml/kg/day、AA 3（足月兒上限 3.0）、脂肪 3、D15：GIR 7.3（目標 5–10）、熱量 77.9 kcal/kg。' },
+        { h: '熱量看階段', t: '0–1 歲 PN 熱量：急性期 45–50、穩定期 60–65、恢復期 75–85 kcal/kg/day。本例已屬恢復期目標；若仍在加護的穩定期，60–65 就合理。' },
+        { h: '管路與配方', t: '長期 PN 用 PICC 或隧道式導管，導管尖端在心包膜外，PN 用專用管腔。多數病人用標準配方；代謝不穩或體液流失大時才個別化。同時盡量推進腸道餵食。' }
+      ],
+      pitfall: '請先選「臨床階段」。工具預設一般／恢復期 75–85；仍在加護時要改選急性期 45–50 或穩定期 60–65，否則會誘導過度餵養。',
+      src: ['AA R3.4、3.5', 'Energy R2.9、Table 2', 'PEPaNIC', 'PEPaNIC 新生兒', 'Access R10.1、10.5、10.13', 'Standard R13.1、13.2', 'Complications R14.27']
+    },
+    {
+      id: 'c6', title: '長期 PN 突然敗血症：四件事一起改', tag: '併發症',
+      who: '28 週出生，現 1.6 kg，出生第 24 天',
+      story: 'NEC 腸切除術後，經 PICC 接受 PN 3 週：胺基酸 3.5、純大豆脂肪 3、D15，液體 140 ml/kg/day，其他靜脈 12 ml/day。今天發燒、活動力差。血小板下降、血糖兩次 190 mg/dL、輸注中 TG 310 mg/dL（3.5 mmol/L）、直接膽紅素 3.2 mg/dL。',
+      ask: '感染怎麼查？葡萄糖和脂肪怎麼調？膽汁滯留要改什麼？',
+      input: I({ weight: 1.6, fluidGoal: 140, dol: 24, phase: 'acute', aaDose: 3.5, lipidDose: 1, dextrosePercent: 10, otherIV: 12 }),
+      expect: { gir: 6.4, kcal: 55.4, pro: 3.5, osm: 637 },
+      alts: [{ label: '原處方（脂肪 3、D15）', input: I({ weight: 1.6, fluidGoal: 140, dol: 24, phase: 'acute', aaDose: 3.5, lipidDose: 3, dextrosePercent: 15, otherIV: 12 }), expect: { gir: 8.6, kcal: 86.1, pro: 3.5, osm: 824 } }],
+      steps: [
+        { h: '感染', t: '視為導管相關感染，直到排除。抗生素前同時抽導管與周邊血培養；經驗性用藥涵蓋革蘭氏陽性與陰性菌。臨床惡化、菌血症持續或復發、化膿性併發症時移除導管。' },
+        { h: '葡萄糖', t: '<28 天的急性病，暫時退回第 1 天的供應量（早產兒 4–8），並依血糖調整。D15 的 GIR 8.6 改 D10，GIR 6.4。' },
+        { h: '脂肪', t: '輸注中 TG >3 mmol/L（265 mg/dL）可考慮減量。敗血症時可減量但通常繼續給，至少提供必需脂肪酸（亞麻油酸 ≥0.25 g/kg/day，依產品換算），並更密集追 TG。ASPEN 2023 反對為了「預防」敗血症而減脂肪；這裡減量是因為 TG 已升高。' },
+        { h: '膽汁滯留', t: '停用純大豆脂肪，改含或不含魚油的複合型脂肪乳劑，並盡量推進腸道餵食。可考慮 UDCA；肝病持續應及早轉介腸衰竭復健中心。ASPEN 2023 不建議為「預防」PNALD 常規減量或指定配方，與此處治療已發生的膽汁滯留不同。' },
+        { h: '之後', t: '熱量由 86.1 掉到 55.4 kcal/kg 只是暫時。感染控制、血糖與 TG 回穩後要逐步加回，否則累積缺口會拖累生長。' }
+      ],
+      pitfall: '「臨床階段」要選急性期，GIR 目標才會改成 4–8，熱量也不標橘色。感染控制後記得改回，否則 55.4 kcal/kg 會被當成可接受。工具沒有 TG 或肝功能欄位，要另外追。',
+      src: ['Complications R14.1–14.6、14.27、14.29、14.31、14.32', 'Carbohydrates R5.5、5.4', 'Lipids R4.5、4.7、4.15、4.17、4.18、4.21', 'ASPEN 2023 Q6、Q7、Q9']
+    }
+  ];
+
+  // lv: basic / adv；a: 正解索引（固定順序，A–D 各 5 題）
+  var QUIZ = [
+    { lv: 'basic', q: '1.0 kg 新生兒，24 小時輸入 10% 葡萄糖 100 ml，GIR 約為多少 mg/kg/min？', o: ['4.2', '6.9', '8.3', '10.0'], a: 1, e: '10 g × 1000 ÷（1 kg × 1440 分鐘）= 6.9。', s: '本工具算式', calc: { weight: 1, fluidGoal: 100, dol: 3, aaDose: 0, lipidDose: 0, dextrosePercent: 10 }, check: { gir: 6.9 } },
+    { lv: 'basic', q: '早產兒出生第 1 天，胺基酸至少要給多少？', o: ['≥1.5 g/kg/day', '≥0.5 g/kg/day', '≥3.5 g/kg/day', '第 3 天才開始'], a: 0, e: '第 1 天至少 1.5 g/kg/day 才能達到合成代謝狀態。', s: 'AA R3.1' },
+    { lv: 'basic', q: '早產兒第 2 天起，靜脈胺基酸建議範圍是？', o: ['1.0–2.0 g/kg/day', '1.5–3.0 g/kg/day', '2.5–3.5 g/kg/day', '3.5–4.5 g/kg/day'], a: 2, e: '2.5–3.5 g/kg/day，並搭配非蛋白熱量 >65 kcal/kg/day。超過 3.5 僅限臨床試驗。1.5–3.0 是足月兒範圍。ASPEN 2023 的目標略高：3–3.5。', s: 'AA R3.2–3.4；ASPEN 2023 Q2、Q3' },
+    { lv: 'basic', q: '早產兒與足月兒的靜脈脂肪上限是？', o: ['2 g/kg/day', '2.5 g/kg/day', '3 g/kg/day', '4 g/kg/day'], a: 3, e: '新生兒不超過 4 g/kg/day；3 g/kg/day 是較大孩童的上限。', s: 'Lipids R4.3、4.4' },
+    { lv: 'basic', q: '早產兒第 1 天的 GIR 起始範圍與全程上限是？', o: ['4–8；上限 12', '2.5–5；上限 12', '8–10；上限 14', '4–8；上限 10'], a: 0, e: '第 1 天 4–8，第 2 天起逐步到 8–10；最低 4、最高 12 mg/kg/min。2.5–5 是足月兒第 1 天。', s: 'Carbohydrates R5.4' },
+    { lv: 'basic', q: '早產兒出生第 1 天，至少應提供多少熱量？', o: ['20–30 kcal/kg/day', '30–40 kcal/kg/day', '45–55 kcal/kg/day', '90–120 kcal/kg/day'], a: 2, e: '第 1 天至少 45–55 kcal/kg/day；90–120 是之後接近子宮內生長的目標。', s: 'Energy R2.4、2.6' },
+    { lv: 'basic', q: '出生體重 <1000 g 的早產兒，第 1 天液體建議量是？', o: ['40–60 ml/kg/day', '80–100 ml/kg/day', '120–140 ml/kg/day', '160–180 ml/kg/day'], a: 1, e: '<1000 g 第 1 天 80–100，之後逐日增加。40–60 是足月兒第 1 天。', s: 'Fluid 新生兒第一期表' },
+    { lv: 'basic', q: '1.2 kg 早產兒，20% 脂肪乳劑 2 g/kg/day，每日體積與熱量各是多少？', o: ['6 ml、12 kcal', '12 ml、12 kcal', '24 ml、24 kcal', '12 ml、24 kcal'], a: 3, e: '2.4 g ÷ 0.2 g/ml = 12 ml；2.4 g × 10 kcal/g = 24 kcal。', s: '本工具換算', calc: { weight: 1.2, fluidGoal: 150, dol: 3, aaDose: 3, lipidDose: 2, dextrosePercent: 10 }, check: { lipidVol: 12, lipidKcal: 24 } },
+    { lv: 'basic', q: '關於 PN 的避光，下列何者正確？', o: ['只有含維生素的袋子才需要避光', '只有脂肪乳劑需要避光', 'PN 袋與輸注管路都應避光', '加護病房內不需要避光'], a: 2, e: 'PN 袋與輸注套都建議避光；早產兒的脂肪乳劑應使用驗證過的避光管路。', s: 'Complications R14.20、Lipids R4.8' },
+    { lv: 'basic', q: '周邊 PN 的滲透壓上限與使用時機是？', o: ['<900 mOsm/L，僅短期', '<600 mOsm/L，可長期', '<1200 mOsm/L，僅短期', '無上限，依血管狀況'], a: 0, e: 'PN 建議走中心靜脈；周邊可短期使用，滲透壓低於 900 mOsm/L；ASPEN 同樣以 900 為上限。', s: 'Complications R14.21、14.22；Worthington 2017 6C、6D' },
+
+    { lv: 'adv', q: '720 g、第 3 天，GIR 11.3，血糖反覆 >180 mg/dL。下一步最符合建議的是？', o: ['立即開始胰島素，GIR 維持不變以保熱量', '先降 GIR，仍過高才加胰島素', '停胺基酸以降低血糖', '停脂肪乳劑並維持 D20'], a: 1, e: '反覆 >10 mmol/L 時，合理調整 GIR 仍不足才用胰島素。胺基酸與脂肪不是第一步。', s: 'Carbohydrates R5.11' },
+    { lv: 'adv', q: '出生第 24 天的早產兒疑敗血症，葡萄糖供應應如何調整？', o: ['維持 8–10，以防熱量不足', '提高到上限 12，以應付感染造成的代謝壓力', '完全停止葡萄糖 24 小時', '暫時退回第 1 天的 4–8，依血糖調整'], a: 3, e: '<28 天的急性病（如感染、敗血症）暫時給第 1 天的碳水化合物量，並依血糖調整。', s: 'Carbohydrates R5.4、5.5' },
+    { lv: 'adv', q: '敗血症早產兒，輸注中 TG 3.5 mmol/L（310 mg/dL）。脂肪乳劑如何處理？', o: ['減量但持續，至少涵蓋必需脂肪酸，並追 TG', '完全停用所有脂肪乳劑，直到感染痊癒、TG 正常', '維持原量，TG 不影響處方', '併用肝素以加速清除'], a: 0, e: '嬰兒 TG >3 mmol/L 可考慮減量。敗血症時通常繼續給，至少涵蓋必需脂肪酸；不建議常規併用肝素。', s: 'Lipids R4.12、4.15、4.21' },
+    { lv: 'adv', q: 'PN 3 週的嬰兒出現膽汁滯留，目前用純大豆脂肪。最適當的調整是？', o: ['增加大豆脂肪以補足熱量', '長期改用純魚油乳劑', '停純大豆，改複合型並盡量推進腸道餵食', '停用所有脂肪乳劑，直到膽紅素完全恢復正常為止'], a: 2, e: '停純大豆、減量或改用含魚油的複合型，並處理其他風險因子。純魚油不建議一般使用，僅限重度惡化時短期救援。', s: 'Lipids R4.18、4.19；Complications R14.27、14.29' },
+    { lv: 'adv', q: 'IUGR 早產兒第 2 天，AA 3 g/kg/day、熱量充足。早期 Ca:P 莫耳比與主要監測重點是？', o: ['1.67；追血鈉', '0.8–1.0；追血磷', '1.3；追血鎂', '2.0；追鹼性磷酸酶與維生素 D'], a: 1, e: '早期 Ca、P 較低且蛋白質、熱量已最佳化時，Ca:P 用 0.8–1.0，以減少高血鈣與低血磷。IUGR 要密切追血磷。1.67 是骨磷灰石的比值。', s: 'Minerals R8.10、8.12' },
+    { lv: 'adv', q: 'Na 3、K 2 mmol/kg/day。為避免高氯性酸中毒，Cl 的合適範圍是？', o: ['0–1 mmol/kg/day', '1–2 mmol/kg/day', '5–6 mmol/kg/day', '3–4 mmol/kg/day'], a: 3, e: 'Na + K − Cl 應為 1–2 mmol/kg/day；5 − Cl = 1–2，所以 Cl = 3–4。', s: 'Fluid R6.5' },
+    { lv: 'adv', q: '關於「重症兒延後 PN 1 週」，下列何者正確？', o: ['足月兒可考慮，需給微量營養素；不適用早產兒', '所有新生兒都應延後 PN 1 週', '只適用於早產兒，足月兒應早期給', '延後組死亡率明顯較低，因此所有重症新生兒應一律延後'], a: 0, e: 'R3.5 是足月重症兒的條件式建議，且要給微量營養素。PEPaNIC 的好處在感染與 PICU 天數，死亡率相近；早產兒第 1 天就該給胺基酸。', s: 'AA R3.1、3.5；PEPaNIC；PEPaNIC 新生兒' },
+    { lv: 'adv', q: '1.9 kg、周邊靜脈，AA 3、脂肪 2、D20、液體 90 ml/kg/day，估計 1000 mOsm/L。下列何者正確？', o: ['最終葡萄糖 ≤12.5%，所以可接受', '改走 D15 就不必再考慮電解質', 'D15 估計 844，加電解質仍可能逼近 900', '減脂肪乳劑可以有效降低袋內滲透壓'], a: 2, e: '工具的袋內滲透壓只算葡萄糖與胺基酸：D15 為 844，加電解質會更高。脂肪在另一條路徑，不進這個估算。需要較久就該放中心導管。', s: '本工具算式；Complications R14.22', calc: { weight: 1.9, fluidGoal: 90, dol: 2, aaDose: 3, lipidDose: 2, dextrosePercent: 15, access: 'peripheral' }, check: { osm: 844 } },
+    { lv: 'adv', q: '穩定早產兒增加奶量時，下列哪項符合 ESPGHAN 2022？', o: ['每餐前常規抽胃殘餘量', '常規每日增量 18–30 ml/kg/day，不常規抽殘餘量', '必須先禁食 7 天再開始餵', '為了預防 NEC，每日增量一律不可超過 10 ml/kg/day'], a: 1, e: '盡早開始小量餵食，穩定者常規每日增 18–30 ml/kg/day。常規抽殘餘量會延後達全腸道，且不影響 NEC 發生率。', s: 'Embleton 2023' },
+    { lv: 'adv', q: '1250 g 早產兒只餵未強化母乳 150 ml/kg/day（0.67 kcal/ml、1.5 g 蛋白/100 kcal），停 PN 後約得到？', o: ['120 kcal/kg、3.6 g/kg，已達標', '100 kcal/kg、3.0 g/kg，僅熱量不足', '120 kcal/kg、1.5 g/kg，僅蛋白不足', '100 kcal/kg、1.5 g/kg，兩者都不足'], a: 3, e: '150 × 0.67 = 100.5 kcal；100.5 ÷ 100 × 1.5 = 1.5 g。目標為 115–140 kcal/kg、蛋白質至少 3.5–4.0 g/kg，需要強化。', s: '本工具算式；Embleton 2023', calc: { weight: 1.25, fluidGoal: 150, dol: 14, enType: 'hm', enVol: 150, enDensity: 0.67, enProtein: 1.5, aaDose: 0, lipidDose: 0, dextrosePercent: 0 }, check: { kcal: 100.5, pro: 1.5 } }
+  ];
+
+  var MAP = {
+    root: '新生兒 TPN',
+    branches: [
+      { h: '液體', c: '#0d6efd', leaves: [
+        { t: '<b>第 1 天</b> 足月 40–60；>1500 g 60–80；1000–1500 g 70–90；<1000 g 80–100', s: 'Fluid' },
+        { t: '<b>第 5 天</b> 足月 100–140；>1500 g 140–160；≤1500 g 160–180', s: 'Fluid' },
+        { t: '<b>體重</b> 足月下降不超過 10%；ELBW/VLBW 7–10%；7–10 天回到出生體重', s: 'R6.1–6.8' },
+        { t: '<b>穩定增長</b> 多數 150–180 ml/kg/day（腸道）', s: 'Embleton' }
+      ] },
+      { h: '葡萄糖', c: '#0aa2c0', leaves: [
+        { t: '<b>早產</b> 第 1 天 4–8；之後 8–10；最低 4、最高 12', s: 'R5.4' },
+        { t: '<b>足月</b> 第 1 天 2.5–5；之後 5–10；最低 2.5、最高 12', s: 'R5.4' },
+        { t: '<b>高血糖</b> 避免 >145 mg/dL；反覆 >180 先降 GIR，不足才胰島素', s: 'R5.10、5.11' },
+        { t: '<b>低血糖</b> 避免反覆或持續 ≤45 mg/dL', s: 'R5.12' },
+        { t: '<b>急性病</b> <28 天感染或敗血症，暫回第 1 天供應量', s: 'R5.5' }
+      ] },
+      { h: '胺基酸', c: '#d63384', leaves: [
+        { t: '<b>早產</b> 第 1 天 ≥1.5；第 2 天起 2.5–3.5，非蛋白熱量 >65', s: 'R3.1–3.3' },
+        { t: '<b>ASPEN 2023</b> 早產起始 ≤3；目標 3–3.5', s: 'Q2、Q3' },
+        { t: '<b>足月</b> 穩定者 1.5–3.0', s: 'R3.4' },
+        { t: '<b>重症足月</b> 可考慮延後 PN 1 週，給微量營養素', s: 'R3.5' },
+        { t: '<b>個別胺基酸</b> 早產半胱胺酸 50–75 mg/kg/day；2 歲內不額外補麩醯胺酸', s: 'R3.12、3.15' }
+      ] },
+      { h: '脂肪乳劑', c: '#e0a800', leaves: [
+        { t: '<b>開始</b> 早產兒出生即可，最遲第 2 天', s: 'R4.2' },
+        { t: '<b>上限</b> 新生兒 ≤4 g/kg/day；20% 為首選；24 小時連續', s: 'R4.3、4.9、4.10' },
+        { t: '<b>ASPEN 2023</b> 早產每日加到 3 g/kg/day；不為預防敗血症減量', s: 'Q4、Q9' },
+        { t: '<b>種類</b> PN 超過數天用複合型，不用純大豆', s: 'R4.7' },
+        { t: '<b>TG</b> 嬰兒輸注中 >265 mg/dL 可考慮減量', s: 'R4.21' },
+        { t: '<b>必需脂肪酸</b> 早產亞麻油酸 ≥0.25、足月 ≥0.1 g/kg/day', s: 'R4.5、4.6' }
+      ] },
+      { h: '熱量', c: '#198754', leaves: [
+        { t: '<b>早產</b> 第 1 天至少 45–55；之後 90–120', s: 'R2.4、2.6' },
+        { t: '<b>足月 PN</b> 急性 45–50；穩定 60–65；恢復 75–85', s: 'Energy Table 2' },
+        { t: '<b>體重增加</b> VLBW 最低點後 17–20 g/kg/day', s: 'R2.5' },
+        { t: '<b>換算</b> 葡萄糖 3.4、胺基酸 4、脂肪 10 kcal/g', s: '本工具' }
+      ] },
+      { h: '電解質・鈣磷鎂', c: '#6f42c1', leaves: [
+        { t: '<b>Na/K</b> 有尿後可第 1 天給；注意非寡尿性高血鉀', s: 'R6.6' },
+        { t: '<b>Cl</b> Na + K − Cl = 1–2 mmol/kg/day', s: 'R6.5' },
+        { t: '<b>早期</b> Ca 0.8–2.0、P 1.0–2.0、Mg 0.1–0.2；Ca:P 0.8–1.0', s: 'R8.9、8.12' },
+        { t: '<b>生長期</b> Ca 1.6–3.5、P 1.6–3.5、Mg 0.2–0.3 mmol/kg/day', s: 'R8.9' },
+        { t: '<b>注意</b> IUGR 追血磷；產前用鎂依血中濃度調整', s: 'R8.5、8.10' }
+      ] },
+      { h: '途徑與配製', c: '#fd7e14', leaves: [
+        { t: '<b>中心</b> 首選；住院長期 PICC 或隧道式；臍靜脈僅短期', s: 'R14.21、10.1、10.12' },
+        { t: '<b>周邊</b> 僅短期，≤900 mOsm/L（ASPEN 同）；12.5% 葡萄糖只是常見做法', s: 'R14.21、14.22；Worthington 2017' },
+        { t: '<b>配製</b> 用有機鈣磷鹽；不用玻璃瓶裝葡萄糖酸鈣', s: 'R8.6、8.7、14.15' },
+        { t: '<b>保護</b> 袋子與管路避光；不與藥物混輸，除非驗證過', s: 'R14.18、14.20' },
+        { t: '<b>配方</b> ESPGHAN：多數標準 PN；不穩定或短腸才個別化', s: 'R13.1、13.2' },
+        { t: '<b>ASPEN 2023</b> 早產不建議常規標準 PN；starter PN 除外，24–48 小時內換個別化', s: 'Q11；Starter 2026' }
+      ] },
+      { h: '併發症', c: '#dc3545', leaves: [
+        { t: '<b>CLABSI</b> 發燒先懷疑；抗生素前抽導管與周邊配對血培養', s: 'R14.1、14.2' },
+        { t: '<b>拔管</b> 惡化、菌血症持續或復發、化膿性併發症', s: 'R14.6' },
+        { t: '<b>血栓阻塞</b> tPA 為建議藥物；尖端位置要正確', s: 'R14.8、14.10' },
+        { t: '<b>肝病</b> 停純大豆；推進腸道；可考慮 UDCA；及早轉介', s: 'R4.18、14.27–14.32' },
+        { t: '<b>骨病</b> 定期追 ALP、Ca、P、Mg、維生素 D', s: 'R8.13、8.14' }
+      ] },
+      { h: '銜接腸道', c: '#20a39e', leaves: [
+        { t: '<b>開始</b> 出生後盡早小量餵食，耐受就加', s: 'Embleton' },
+        { t: '<b>加量</b> 穩定者每日 18–30 ml/kg/day', s: 'Embleton' },
+        { t: '<b>殘餘量</b> 不常規抽；有臨床徵象才評估', s: 'Embleton' },
+        { t: '<b>目標</b> 115–140 kcal/kg；蛋白質至少 3.5–4.0 g/kg/day', s: 'Embleton' },
+        { t: '<b>轉換期</b> 缺口高風險；各 NICU 應訂標準流程', s: 'Embleton' }
+      ] }
+    ]
+  };
+
+  return { SRC: SRC, CASES: CASES, QUIZ: QUIZ, MAP: MAP };
+})();
+if (typeof module !== 'undefined') module.exports = TEACH;
+/*TEACH-END*/
+
   const $ = id => document.getElementById(id);
-  const FIELDS = ['weight', 'fluidGoal', 'population', 'dol', 'enType', 'enVol', 'enDensity', 'enProtein', 'aaDose', 'lipidDose', 'dextrosePercent', 'otherIV', 'access'];
+  const FIELDS = ['weight', 'fluidGoal', 'population', 'dol', 'phase', 'enType', 'enVol', 'enDensity', 'enProtein', 'aaDose', 'lipidDose', 'dextrosePercent', 'otherIV', 'access'];
   const DEFAULTS = Object.fromEntries(FIELDS.map(f => [f, $(f).value]));
   let macroChart = null, latest = null;
   const f1 = x => x.toFixed(1), f0 = x => x.toFixed(0);
@@ -478,6 +816,7 @@ if (typeof module !== 'undefined') module.exports = TPN;
     $('kcalTarget').textContent = '目標建議: --';
     $('girTarget').textContent = '目標建議: --';
     $('proTarget').textContent = '';
+    $('npcNote').textContent = 'NICE 約 125–188';
     $('rateBody').innerHTML = '<tr><td colspan="4" class="text-muted">--</td></tr>';
     $('macroText').textContent = '';
     $('fluidDetails').textContent = '請輸入參數';
@@ -498,7 +837,9 @@ if (typeof module !== 'undefined') module.exports = TPN;
         : r.errors.map(e => `<div class="alert alert-danger">⛔ ${esc(e)}</div>`).join('');
       return;
     }
-    alerts.innerHTML = r.warnings.map(x => `<div class="alert alert-${x.lvl === 'danger' ? 'danger' : 'warning'}">⚠️ ${esc(x.msg)}</div>`).join('');
+    alerts.innerHTML = r.warnings.map(x => x.lvl === 'info'
+      ? `<div class="alert alert-info">ℹ️ ${esc(x.msg)}</div>`
+      : `<div class="alert alert-${x.lvl === 'danger' ? 'danger' : 'warning'}">⚠️ ${esc(x.msg)}</div>`).join('');
 
     $('resTotalKcal').textContent = f1(r.kcalKg); setLevel($('resTotalKcal'), r.kcalLevel === 'ok' ? null : r.kcalLevel);
     $('kcalTarget').textContent = `目標建議: ${r.kcalRange.label}`;
@@ -508,6 +849,7 @@ if (typeof module !== 'undefined') module.exports = TPN;
     $('proTarget').textContent = `建議 ${r.proRange.lo}–${r.proRange.hi}`;
     $('resEnPercent').textContent = f1(r.enPct);
     $('resNpcn').textContent = r.npcn === null ? '--' : f0(r.npcn);
+    $('npcNote').textContent = `NICE 約 125–188；非蛋白 ${f1(r.npKcalKg)} kcal/kg`;
 
     const rows = [];
     if (r.bagVol > 0) rows.push(['AA + 葡萄糖袋', r.bagVol, r.rates.bag, `最終葡萄糖 ${f1(r.finalDex)}%、估計 ≥${f0(r.osm)} mOsm/L`]);
@@ -565,7 +907,7 @@ if (typeof module !== 'undefined') module.exports = TPN;
     const set = (id, v) => { $(id).textContent = v; };
     set('prtDateTime', new Date().toLocaleString('zh-TW'));
     set('prtWeight', r.w.toFixed(2));
-    set('prtPop', `${r.pop === 'term' ? '足月兒' : '早產兒'}・出生第 ${r.dol} 天`);
+    set('prtPop', `${r.pop === 'term' ? '足月兒' : '早產兒'}・出生第 ${r.dol} 天・${{ recovery: '一般／恢復期', stable: '加護穩定期', acute: '急性期' }[r.phase]}`);
     set('prtFluidGoal', r.fluidGoal);
     set('prtTotalFluid', f1(r.totalFluid));
     set('prtEn', r.enVol > 0
@@ -619,12 +961,208 @@ if (typeof module !== 'undefined') module.exports = TPN;
   $('printBtn').addEventListener('click', () => { if (latest) window.print(); });
   window.addEventListener('beforeprint', fillPrint);
   $('demoBtn').addEventListener('click', () => loadValues({
-    weight: 1.2, fluidGoal: 150, population: 'preterm', dol: 5, enType: 'hm', enDensity: 0.67, enProtein: 1.5,
+    weight: 1.2, fluidGoal: 150, population: 'preterm', dol: 5, phase: 'recovery', enType: 'hm', enDensity: 0.67, enProtein: 1.5,
     enVol: 30, aaDose: 3.5, lipidDose: 3.0, dextrosePercent: 15, otherIV: 5, access: 'central'
   }, true));
   $('resetBtn').addEventListener('click', () => loadValues(DEFAULTS, false));
 
   render();
+
+  // ---------- 教學分頁 ----------
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function loadCase(c) {
+    loadValues(c.input, false);
+    location.hash = 'calc';
+    showView('calc');
+  }
+
+  function summary(r) {
+    return `GIR ${f1(r.gir)}、熱量 ${f1(r.kcalKg)} kcal/kg、蛋白質 ${f1(r.proteinKg)} g/kg${r.bagVol > 0 ? `、估計 ≥${f0(r.osm)} mOsm/L` : ''}`;
+  }
+
+  function renderCaseOutput(c) {
+    const r = TPN.calc(c.input);
+    const box = el('div', 'case-output mt-2');
+    const dl = el('dl');
+    const rows = [
+      ['帶入值', `${r.w} kg、${r.pop === 'term' ? '足月' : '早產'}、第 ${r.dol} 天、${{ recovery: '一般／恢復期', stable: '加護穩定期', acute: '急性期' }[r.phase]}、液體 ${r.fluidGoal} ml/kg/day、${r.peripheral ? '周邊' : '中心'}靜脈`],
+      ['處方', `${r.enVol > 0 ? `${r.milk.label} ${r.enVolKg} ml/kg/day；` : ''}AA ${r.aaDose}、脂肪 ${r.lipidDose} g/kg/day、D${r.dexPct}${r.otherIV ? `；其他靜脈 ${r.otherIV} ml/day` : ''}`],
+      ['液體分配', `總 ${f1(r.totalFluid)} = EN ${f1(r.enVol)} + 其他 ${f1(r.otherIV)} + PN ${f1(r.pnVol)} ml`],
+      ['結果', summary(r)],
+      ['速率', `AA+葡萄糖袋 ${r.rates.bag.toFixed(2)} ml/hr（最終葡萄糖 ${f1(r.finalDex)}%）、脂肪 ${r.rates.lipid.toFixed(2)} ml/hr`],
+      ['工具警示', r.warnings.length ? r.warnings.map(w => w.msg).join('；') : '無']
+    ];
+    c.alts.forEach(a => rows.push(['比較：' + a.label, summary(TPN.calc(a.input))]));
+    rows.forEach(([k, v]) => { dl.append(el('dt', '', k), el('dd', '', v)); });
+    box.append(el('div', 'fw-bold mb-1', '工具輸出（由計算引擎即時產生）'), dl);
+    return box;
+  }
+
+  function renderSources() {
+    const card = el('div', 'card');
+    const body = el('div', 'card-body small');
+    body.append(el('h6', '', '參考來源與核對範圍'));
+    const ul = el('ul', 'mb-1');
+    TEACH.SRC.forEach(s => {
+      const li = el('li');
+      const a = el('a', '', s.t); a.href = s.u; a.target = '_blank'; a.rel = 'noopener';
+      li.append(a, document.createTextNode(`（已讀：${s.r}）`));
+      ul.append(li);
+    });
+    body.append(ul, el('p', 'text-muted mb-0', '人物與數值皆為教學虛構。僅供教學與臨床輔助，醫囑仍須依病童實際狀況、院內規範與檢驗結果調整。'));
+    card.append(body);
+    return card;
+  }
+
+  function renderCases() {
+    const root = $('view-cases');
+    root.append(el('p', 'text-muted small', '6 例涵蓋起始、血糖、銜接、周邊、足月外科與併發症。先看情境自己想，再展開分析；「帶入計算機」會把最後的處方填入第一頁。'));
+    TEACH.CASES.forEach((c, idx) => {
+      const card = el('div', 'card'); card.id = c.id;
+      const body = el('div', 'card-body');
+      const head = el('div', 'd-flex flex-wrap justify-content-between align-items-start gap-2');
+      const tag = el('span', 'badge teach-badge', c.tag);
+      head.append(el('h5', 'mb-1', `病例 ${idx + 1}：${c.title}`), tag);
+      const det = el('details', 'mt-2');
+      det.append(el('summary', '', '展開分析'), renderCaseOutput(c));
+      c.steps.forEach(s => {
+        const st = el('div', 'case-step');
+        st.append(el('strong', '', s.h), document.createTextNode(s.t));
+        det.append(st);
+      });
+      det.append(el('div', 'case-pit', '⚠️ ' + c.pitfall), el('div', 'case-src', '依據：' + c.src.join('、')));
+      const btn = el('button', 'btn btn-outline-primary btn-sm mt-1', '帶入計算機');
+      btn.type = 'button';
+      btn.addEventListener('click', () => loadCase(c));
+      body.append(head, el('div', 'case-meta', c.who), el('p', 'mt-2 mb-1', c.story), el('div', 'case-q', '❓ ' + c.ask), btn, det);
+      card.append(body);
+      root.append(card);
+    });
+    root.append(renderSources());
+  }
+
+  let quizLevel = 'all';
+  let quizAnswers = {};
+
+  function renderQuiz() {
+    const root = $('view-quiz');
+    root.replaceChildren();
+    const list = TEACH.QUIZ.map((q, i) => ({ q, i })).filter(x => quizLevel === 'all' || x.q.lv === quizLevel);
+    const done = list.filter(x => quizAnswers[x.i] !== undefined);
+    const right = done.filter(x => quizAnswers[x.i] === x.q.a).length;
+
+    const bar = el('div', 'quiz-bar d-flex flex-wrap gap-2 align-items-center justify-content-between');
+    const group = el('div', 'btn-group btn-group-sm');
+    [['all', '全部 20'], ['basic', '基礎 10'], ['adv', '高階 10']].forEach(([k, label]) => {
+      const b = el('button', 'btn ' + (quizLevel === k ? 'btn-primary' : 'btn-outline-primary'), label);
+      b.type = 'button';
+      b.setAttribute('aria-pressed', quizLevel === k);
+      b.addEventListener('click', () => { quizLevel = k; renderQuiz(); });
+      group.append(b);
+    });
+    const score = el('strong', '', `已答 ${done.length}/${list.length}，答對 ${right}`);
+    score.id = 'quizScore'; score.setAttribute('aria-live', 'polite');
+    const reset = el('button', 'btn btn-outline-secondary btn-sm', '重新作答');
+    reset.type = 'button';
+    reset.addEventListener('click', () => { quizAnswers = {}; renderQuiz(); });
+    bar.append(group, score, reset);
+    root.append(bar);
+
+    list.forEach(({ q, i }, n) => {
+      const card = el('div', 'card'); card.id = 'q' + (i + 1);
+      const body = el('div', 'card-body');
+      const head = el('div', 'd-flex gap-2 align-items-start mb-2');
+      head.append(el('span', 'badge ' + (q.lv === 'adv' ? 'text-bg-danger' : 'text-bg-secondary'), q.lv === 'adv' ? '高階' : '基礎'), el('div', 'fw-semibold', `${n + 1}. ${q.q}`));
+      body.append(head);
+      const picked = quizAnswers[i];
+      q.o.forEach((opt, j) => {
+        const b = el('button', 'quiz-opt', `${'ABCD'[j]}. ${opt}`);
+        b.type = 'button';
+        if (picked !== undefined) {
+          b.disabled = true;
+          if (j === q.a) b.classList.add('right');
+          else if (j === picked) b.classList.add('wrong');
+        }
+        b.addEventListener('click', () => { quizAnswers[i] = j; const y = window.scrollY; renderQuiz(); window.scrollTo(0, y); });
+        body.append(b);
+      });
+      if (picked !== undefined) {
+        const ex = el('div', 'quiz-exp');
+        ex.append(el('strong', picked === q.a ? 'text-success' : 'text-danger', picked === q.a ? '答對。' : `答錯，正解是 ${'ABCD'[q.a]}。`), document.createTextNode(q.e));
+        ex.append(el('div', 'quiz-src', '依據：' + q.s));
+        body.append(ex);
+      }
+      card.append(body);
+      root.append(card);
+    });
+  }
+
+  function renderMap() {
+    const root = $('view-map');
+    const top = el('div', 'd-flex flex-wrap gap-2 align-items-center justify-content-between');
+    top.append(el('div', 'mm-root', TEACH.MAP.root));
+    const tgl = el('button', 'btn btn-outline-secondary btn-sm', '全部收合');
+    tgl.type = 'button';
+    top.append(tgl);
+    const wrap = el('div', 'mm-branches');
+    TEACH.MAP.branches.forEach(b => {
+      const row = el('div', 'mm-branch');
+      row.style.setProperty('--mm', b.c);
+      const head = el('button', 'mm-head', b.h);
+      head.type = 'button';
+      head.setAttribute('aria-expanded', 'true');
+      const ul = el('ul', 'mm-leaves');
+      b.leaves.forEach(l => {
+        const li = el('li');
+        const m = l.t.match(/^<b>(.*?)<\/b>(.*)$/);
+        li.append(el('b', '', m[1]), document.createTextNode(m[2]), el('span', 'mm-tag', l.s));
+        ul.append(li);
+      });
+      head.addEventListener('click', () => {
+        const open = head.getAttribute('aria-expanded') === 'true';
+        head.setAttribute('aria-expanded', String(!open));
+        ul.hidden = open;
+      });
+      row.append(head, ul);
+      wrap.append(row);
+    });
+    tgl.addEventListener('click', () => {
+      const close = tgl.textContent === '全部收合';
+      wrap.querySelectorAll('.mm-head').forEach(h => { h.setAttribute('aria-expanded', String(!close)); });
+      wrap.querySelectorAll('.mm-leaves').forEach(u => { u.hidden = close; });
+      tgl.textContent = close ? '全部展開' : '全部收合';
+    });
+    const card = el('div', 'card');
+    const body = el('div', 'card-body');
+    body.append(top, wrap, el('p', 'text-muted small mt-3 mb-0', '點分支可收合。單位未標示者：液體 ml/kg/day、葡萄糖 mg/kg/min、胺基酸與脂肪 g/kg/day、熱量 kcal/kg/day。右側小字為依據：R 編號見 ESPGHAN 2018 各章，Q 編號見 ASPEN 2023。兩份指引不同處已分開列出。'));
+    card.append(body);
+    root.append(card);
+  }
+
+  function showView(v) {
+    const views = ['calc', 'cases', 'quiz', 'map'];
+    if (!views.includes(v)) v = 'calc';
+    views.forEach(k => { $('view-' + k).hidden = k !== v; });
+    document.querySelectorAll('#tabNav .nav-link').forEach(a => {
+      const on = a.dataset.view === v;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    window.scrollTo(0, 0);
+    if (v === 'calc' && macroChart) macroChart.resize();
+  }
+
+  renderCases();
+  renderQuiz();
+  renderMap();
+  window.addEventListener('hashchange', () => showView(location.hash.slice(1)));
+  showView(location.hash.slice(1));
 
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

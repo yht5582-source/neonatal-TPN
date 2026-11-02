@@ -1,5 +1,5 @@
 // 離線快取：同源檔案、Bootstrap CSS 與 Chart.js，stale-while-revalidate
-const CACHE = 'neonatal-tpn-v2';
+const CACHE = 'neonatal-tpn-v4';
 const ASSETS = [
   './',
   './index.html',
